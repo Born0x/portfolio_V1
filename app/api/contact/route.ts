@@ -3,6 +3,24 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Security: Escape HTML to prevent XSS attacks
+function escapeHtml(text: string): string {
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// Security: Validate email format
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -12,6 +30,30 @@ export async function POST(request: Request) {
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { error: "Tous les champs obligatoires doivent être remplis" },
+        { status: 400 }
+      );
+    }
+
+    // Security: Validate email format
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Format d'email invalide" },
+        { status: 400 }
+      );
+    }
+
+    // Security: Limit field lengths to prevent abuse
+    if (name.length > 100 || email.length > 100 || subject.length > 200 || message.length > 5000) {
+      return NextResponse.json(
+        { error: "Un ou plusieurs champs dépassent la longueur maximale autorisée" },
+        { status: 400 }
+      );
+    }
+
+    // Security: Validate phone if provided
+    if (phone && phone.length > 20) {
+      return NextResponse.json(
+        { error: "Numéro de téléphone invalide" },
         { status: 400 }
       );
     }
@@ -80,29 +122,29 @@ export async function POST(request: Request) {
               <div class="content">
                 <div class="field">
                   <span class="label">Nom complet:</span>
-                  <div class="value">${name}</div>
+                  <div class="value">${escapeHtml(name)}</div>
                 </div>
 
                 <div class="field">
                   <span class="label">Email:</span>
-                  <div class="value"><a href="mailto:${email}">${email}</a></div>
+                  <div class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>
                 </div>
 
                 ${phone ? `
                 <div class="field">
                   <span class="label">Téléphone:</span>
-                  <div class="value"><a href="tel:${phone}">${phone}</a></div>
+                  <div class="value"><a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></div>
                 </div>
                 ` : ''}
 
                 <div class="field">
                   <span class="label">Sujet:</span>
-                  <div class="value">${subject}</div>
+                  <div class="value">${escapeHtml(subject)}</div>
                 </div>
 
                 <div class="field">
                   <span class="label">Message:</span>
-                  <div class="value message-content">${message}</div>
+                  <div class="value message-content">${escapeHtml(message)}</div>
                 </div>
               </div>
             </div>

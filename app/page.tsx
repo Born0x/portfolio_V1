@@ -87,68 +87,247 @@ async function getSettings() {
   return settings;
 }
 
-export default async function HomePage() {
-  const [projects, studies, education, certifications, settings] = await Promise.all([
-    getProjects(),
-    getStudies(),
+async function ProjectsCarousel() {
+  const projects = await getProjects();
+
+  if (projects.length === 0) return null;
+
+  return (
+    <RowCarousel title="Expériences Professionnelles">
+      {projects.map((project) => (
+        <MediaCard
+          key={project.id}
+          title={project.title}
+          description={project.description}
+          image={project.image}
+          href={`/projects/${project.slug}`}
+          tags={project.tags}
+          year={project.start_date ? new Date(project.start_date).getFullYear() : undefined}
+        />
+      ))}
+    </RowCarousel>
+  );
+}
+
+async function StudiesCarousel() {
+  const studies = await getStudies();
+
+  if (studies.length === 0) return null;
+
+  return (
+    <RowCarousel title="Projets Académiques">
+      {studies.map((study) => (
+        <MediaCard
+          key={study.id}
+          title={study.title}
+          description={study.description}
+          image={study.image}
+          href={`/studies/${study.slug}`}
+          tags={study.tags}
+          year={study.date ? new Date(study.date).getFullYear() : undefined}
+        />
+      ))}
+    </RowCarousel>
+  );
+}
+
+async function TimelineSection() {
+  const [education, certifications] = await Promise.all([
     getEducation(),
     getCertifications(),
-    getSettings(),
   ]);
 
+  if (education.length === 0 && certifications.length === 0) return null;
+
+  return (
+    <section className="py-16 px-4 md:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 font-display text-4xl font-bold text-white">
+            Mon Parcours
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Diplômes et certifications
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Education Timeline */}
+          {education.length > 0 && (
+            <div>
+              <div className="mb-6 flex items-center gap-3">
+                <div className="rounded-lg bg-netflix-red/20 p-3">
+                  <GraduationCap className="h-6 w-6 text-netflix-red" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Diplômes</h3>
+              </div>
+
+              <div className="space-y-6">
+                {education.map((edu: any, index: number) => (
+                  <div
+                    key={edu.id}
+                    className="rounded-lg border border-white/10 bg-white/5 p-6 transition-all hover:bg-white/10 h-[180px] flex items-start animate-float"
+                    style={{
+                      animationDelay: `${index * 0.2}s`,
+                      animationDuration: `${3 + index * 0.3}s`
+                    }}
+                  >
+                    <div className="flex items-start gap-4 w-full">
+                      {edu.logo && (
+                        <div className="w-12 h-12 rounded-lg bg-white/10 p-2 flex-shrink-0">
+                          <Image
+                            src={edu.logo}
+                            alt={edu.institution}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-lg font-bold text-white mb-1">
+                          {edu.degree}
+                        </h4>
+                        <p className="text-muted-foreground mb-2">
+                          {edu.institution}
+                        </p>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {new Date(edu.start_date).toLocaleDateString("fr-FR", {
+                              month: "short",
+                              year: "numeric",
+                            })}{" "}
+                            -{" "}
+                            {edu.current
+                              ? "Présent"
+                              : new Date(edu.end_date).toLocaleDateString("fr-FR", {
+                                  month: "short",
+                                  year: "numeric",
+                                })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 text-center">
+                <a
+                  href="/education"
+                  className="text-netflix-red hover:underline font-semibold"
+                >
+                  Voir tous mes diplômes →
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* Certifications Timeline */}
+          {certifications.length > 0 && (
+            <div>
+              <div className="mb-6 flex items-center gap-3">
+                <div className="rounded-lg bg-netflix-red/20 p-3">
+                  <Award className="h-6 w-6 text-netflix-red" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Certifications</h3>
+              </div>
+
+              <div className="space-y-6">
+                {certifications.map((cert: any, index: number) => (
+                  <div
+                    key={cert.id}
+                    className="rounded-lg border border-white/10 bg-white/5 p-6 transition-all hover:bg-white/10 h-[180px] flex items-start animate-float"
+                    style={{
+                      animationDelay: `${index * 0.25}s`,
+                      animationDuration: `${3.5 + index * 0.4}s`
+                    }}
+                  >
+                    <div className="flex items-start gap-4 w-full">
+                      {cert.logo && (
+                        <div className="w-12 h-12 rounded-lg bg-white/10 p-2 flex-shrink-0">
+                          <Image
+                            src={cert.logo}
+                            alt={cert.organization}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-lg font-bold text-white mb-1">
+                          {cert.name}
+                        </h4>
+                        <p className="text-muted-foreground mb-2">
+                          {cert.organization}
+                        </p>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {new Date(cert.obtained_date).toLocaleDateString("fr-FR", {
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 text-center">
+                <a
+                  href="/education"
+                  className="text-netflix-red hover:underline font-semibold"
+                >
+                  Voir toutes mes certifications →
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+async function HeroSection() {
+  const settings = await getSettings();
+
+  return (
+    <Hero
+      title={settings.hero_title || "Portfolio de Mehdi Zeroual"}
+      tagline={settings.hero_tagline || "Entrepreneur • Développeur • Apprenant"}
+      description={settings.hero_description || "Bienvenue dans mon univers. Découvrez mes projets entrepreneuriaux, mes certifications, et mon parcours de développement personnel et professionnel."}
+      image={settings.hero_banner || "/images/hero-home.jpg"}
+      imageMobile={settings.hero_banner_mobile || settings.hero_banner || "/images/hero-home.jpg"}
+      cvUrl={settings.cv_url}
+      ctaPrimary={{
+        label: "Explorer mes projets",
+        href: "/projects",
+      }}
+      ctaSecondary={{
+        label: "Voir mon parcours",
+        href: "/education",
+      }}
+    />
+  );
+}
+
+export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <Hero
-        title={settings.hero_title || "Portfolio de Mehdi Zeroual"}
-        tagline={settings.hero_tagline || "Entrepreneur • Développeur • Apprenant"}
-        description={settings.hero_description || "Bienvenue dans mon univers. Découvrez mes projets entrepreneuriaux, mes certifications, et mon parcours de développement personnel et professionnel."}
-        image={settings.hero_banner || "/images/hero-home.jpg"}
-        imageMobile={settings.hero_banner_mobile || settings.hero_banner || "/images/hero-home.jpg"}
-        cvUrl={settings.cv_url}
-        ctaPrimary={{
-          label: "Explorer mes projets",
-          href: "/projects",
-        }}
-        ctaSecondary={{
-          label: "Voir mon parcours",
-          href: "/education",
-        }}
-      />
+      <HeroSection />
 
       {/* Projects Section */}
-      {projects.length > 0 && (
-        <RowCarousel title="Expériences Professionnelles">
-          {projects.map((project) => (
-            <MediaCard
-              key={project.id}
-              title={project.title}
-              description={project.description}
-              image={project.image}
-              href={`/projects/${project.slug}`}
-              tags={project.tags}
-              year={project.start_date ? new Date(project.start_date).getFullYear() : undefined}
-            />
-          ))}
-        </RowCarousel>
-      )}
+      <ProjectsCarousel />
 
       {/* Studies Section */}
-      {studies.length > 0 && (
-        <RowCarousel title="Projets Académiques">
-          {studies.map((study) => (
-            <MediaCard
-              key={study.id}
-              title={study.title}
-              description={study.description}
-              image={study.image}
-              href={`/studies/${study.slug}`}
-              tags={study.tags}
-              year={study.date ? new Date(study.date).getFullYear() : undefined}
-            />
-          ))}
-        </RowCarousel>
-      )}
+      <StudiesCarousel />
 
       {/* Skills Section */}
       <SkillsSection />
@@ -157,159 +336,7 @@ export default async function HomePage() {
       <ToolsSection />
 
       {/* Timeline Section - Education & Certifications */}
-      {(education.length > 0 || certifications.length > 0) && (
-        <section className="py-16 px-4 md:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-12 text-center">
-              <h2 className="mb-4 font-display text-4xl font-bold text-white">
-                Mon Parcours
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Diplômes et certifications
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              {/* Education Timeline */}
-              {education.length > 0 && (
-                <div>
-                  <div className="mb-6 flex items-center gap-3">
-                    <div className="rounded-lg bg-netflix-red/20 p-3">
-                      <GraduationCap className="h-6 w-6 text-netflix-red" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white">Diplômes</h3>
-                  </div>
-
-                  <div className="space-y-6">
-                    {education.map((edu: any, index: number) => (
-                      <div
-                        key={edu.id}
-                        className="rounded-lg border border-white/10 bg-white/5 p-6 transition-all hover:bg-white/10 h-[180px] flex items-start animate-float"
-                        style={{
-                          animationDelay: `${index * 0.2}s`,
-                          animationDuration: `${3 + index * 0.3}s`
-                        }}
-                      >
-                        <div className="flex items-start gap-4 w-full">
-                          {edu.logo && (
-                            <div className="w-12 h-12 rounded-lg bg-white/10 p-2 flex-shrink-0">
-                              <Image
-                                src={edu.logo}
-                                alt={edu.institution}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-lg font-bold text-white mb-1">
-                              {edu.degree}
-                            </h4>
-                            <p className="text-muted-foreground mb-2">
-                              {edu.institution}
-                            </p>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Calendar className="h-4 w-4" />
-                              <span>
-                                {new Date(edu.start_date).toLocaleDateString("fr-FR", {
-                                  month: "short",
-                                  year: "numeric",
-                                })}{" "}
-                                -{" "}
-                                {edu.current
-                                  ? "Présent"
-                                  : new Date(edu.end_date).toLocaleDateString("fr-FR", {
-                                      month: "short",
-                                      year: "numeric",
-                                    })}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 text-center">
-                    <a
-                      href="/education"
-                      className="text-netflix-red hover:underline font-semibold"
-                    >
-                      Voir tous mes diplômes →
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {/* Certifications Timeline */}
-              {certifications.length > 0 && (
-                <div>
-                  <div className="mb-6 flex items-center gap-3">
-                    <div className="rounded-lg bg-netflix-red/20 p-3">
-                      <Award className="h-6 w-6 text-netflix-red" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white">Certifications</h3>
-                  </div>
-
-                  <div className="space-y-6">
-                    {certifications.map((cert: any, index: number) => (
-                      <div
-                        key={cert.id}
-                        className="rounded-lg border border-white/10 bg-white/5 p-6 transition-all hover:bg-white/10 h-[180px] flex items-start animate-float"
-                        style={{
-                          animationDelay: `${index * 0.25}s`,
-                          animationDuration: `${3.5 + index * 0.4}s`
-                        }}
-                      >
-                        <div className="flex items-start gap-4 w-full">
-                          {cert.logo && (
-                            <div className="w-12 h-12 rounded-lg bg-white/10 p-2 flex-shrink-0">
-                              <Image
-                                src={cert.logo}
-                                alt={cert.organization}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-lg font-bold text-white mb-1">
-                              {cert.name}
-                            </h4>
-                            <p className="text-muted-foreground mb-2">
-                              {cert.organization}
-                            </p>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Calendar className="h-4 w-4" />
-                              <span>
-                                {new Date(cert.obtained_date).toLocaleDateString("fr-FR", {
-                                  month: "long",
-                                  year: "numeric",
-                                })}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 text-center">
-                    <a
-                      href="/education"
-                      className="text-netflix-red hover:underline font-semibold"
-                    >
-                      Voir toutes mes certifications →
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
+      <TimelineSection />
 
       {/* Call to Action */}
       <section className="py-16 px-4 md:px-8">
