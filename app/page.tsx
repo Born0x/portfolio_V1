@@ -5,8 +5,9 @@ import { SkillsSection } from "@/components/skills-section";
 import { ToolsSection } from "@/components/tools-section";
 import { supabase } from "@/lib/supabase";
 import { GraduationCap, Award, Calendar } from "lucide-react";
+import Image from "next/image";
 
-export const revalidate = 0; // Disable caching for this page
+export const revalidate = 60; // Cache for 60 seconds
 
 async function getProjects() {
   const { data, error } = await supabase
@@ -192,9 +193,11 @@ export default async function HomePage() {
                         <div className="flex items-start gap-4 w-full">
                           {edu.logo && (
                             <div className="w-12 h-12 rounded-lg bg-white/10 p-2 flex-shrink-0">
-                              <img
+                              <Image
                                 src={edu.logo}
                                 alt={edu.institution}
+                                width={48}
+                                height={48}
                                 className="w-full h-full object-contain"
                               />
                             </div>
@@ -262,9 +265,11 @@ export default async function HomePage() {
                         <div className="flex items-start gap-4 w-full">
                           {cert.logo && (
                             <div className="w-12 h-12 rounded-lg bg-white/10 p-2 flex-shrink-0">
-                              <img
+                              <Image
                                 src={cert.logo}
                                 alt={cert.organization}
+                                width={48}
+                                height={48}
                                 className="w-full h-full object-contain"
                               />
                             </div>
