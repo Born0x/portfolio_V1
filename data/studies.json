@@ -1,0 +1,30 @@
+[
+  {
+    "id": "innovation-digitalisation-pme",
+    "slug": "innovation-digitalisation-pme",
+    "title": "Innovation et Digitalisation des PME Bretonnes",
+    "description": "Analyse économétrique de l'impact de la transformation numérique sur les PME en Bretagne.",
+    "excerpt": "Mon rapport d'économétrie explore comment l'innovation et la digitalisation transforment les petites et moyennes entreprises bretonnes, avec des données concrètes et des recommandations stratégiques.",
+    "image": "/images/studies/innovation-pme.jpg",
+    "completedAt": "2023-06-15",
+    "institution": "Université de Rennes",
+    "degree": "Master Économie et Management",
+    "tags": ["Économie", "Innovation", "PME", "Digital", "Recherche"],
+    "readingTime": 8,
+    "category": "Research"
+  },
+  {
+    "id": "ga4-segmentation-marjane",
+    "slug": "ga4-segmentation-marjane",
+    "title": "Segmentation Client avec GA4 chez Marjane",
+    "description": "Comment j'ai utilisé Google Analytics 4 et Looker pour améliorer la segmentation client.",
+    "excerpt": "Retour d'expérience sur mon stage chez Marjane où j'ai implémenté une stratégie de segmentation avancée en utilisant GA4 et Looker Studio pour optimiser les campagnes marketing.",
+    "image": "/images/studies/ga4-marjane.jpg",
+    "completedAt": "2023-09-20",
+    "institution": "Marjane - Stage de Master",
+    "degree": "Master Marketing Digital",
+    "tags": ["Analytics", "GA4", "Marketing", "Data", "Retail"],
+    "readingTime": 6,
+    "category": "Case Study"
+  }
+]

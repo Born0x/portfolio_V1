@@ -1,0 +1,52 @@
+[
+  {
+    "id": "bleedi",
+    "slug": "bleedi",
+    "title": "Bleedi",
+    "description": "Patchs apaisants innovants pour soulager les règles douloureuses de manière naturelle et efficace.",
+    "fullDescription": "Bleedi propose une solution innovante pour les femmes souffrant de règles douloureuses. Nos patchs apaisants utilisent des ingrédients naturels pour offrir un soulagement rapide et durable, sans effets secondaires.",
+    "image": "/images/projects/bleedi.jpg",
+    "year": 2024,
+    "tags": ["E-commerce", "Santé", "Femtech", "Startup"],
+    "status": "En cours",
+    "role": "Co-fondateur & CEO",
+    "technologies": ["Shopify", "Next.js", "Stripe"],
+    "links": {
+      "website": "https://bleedi.co",
+      "instagram": "https://www.instagram.com/bleedi.co/"
+    }
+  },
+  {
+    "id": "mamayou",
+    "slug": "mamayou",
+    "title": "Mamayou",
+    "description": "Gigoteuses premium et accessoires pour bébés, alliant confort, sécurité et design élégant.",
+    "fullDescription": "Mamayou crée des gigoteuses premium pour bébés, en utilisant uniquement des matériaux biologiques et durables. Chaque produit est conçu avec soin pour garantir le confort et la sécurité des tout-petits.",
+    "image": "/images/projects/mamayou.jpg",
+    "year": 2023,
+    "tags": ["E-commerce", "Puériculture", "Premium", "Bio"],
+    "status": "Lancé",
+    "role": "Fondateur",
+    "technologies": ["Shopify", "Instagram", "Facebook Ads"],
+    "links": {
+      "website": "https://mamayou.com",
+      "instagram": "https://instagram.com/mamayou"
+    }
+  },
+  {
+    "id": "open-wealth",
+    "slug": "open-wealth",
+    "title": "Open Wealth",
+    "description": "Plateforme de micro-investissements accessible permettant à tous d'investir dans des actifs diversifiés.",
+    "fullDescription": "Open Wealth démocratise l'investissement en permettant à chacun d'investir à partir de 10€ dans des portefeuilles diversifiés. Notre mission est de rendre la finance accessible et transparente pour tous.",
+    "image": "/images/projects/open-wealth.jpg",
+    "year": 2024,
+    "tags": ["Fintech", "Investissement", "SaaS", "Web3"],
+    "status": "En développement",
+    "role": "Co-fondateur & CTO",
+    "technologies": ["Next.js", "TypeScript", "Node.js", "PostgreSQL"],
+    "links": {
+      "website": "https://openwealth.com"
+    }
+  }
+]
