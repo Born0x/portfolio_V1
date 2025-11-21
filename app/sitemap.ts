@@ -1,24 +1,24 @@
 import { MetadataRoute } from "next";
-import projects from "@/data/projects.json";
-import trips from "@/data/trips.json";
-import blog from "@/data/blog.json";
+import { supabase } from "@/lib/supabase";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://mehdislife.com";
+
+  // Fetch data from Supabase
+  const [projectsRes, studiesRes] = await Promise.all([
+    supabase.from("projects").select("slug, updated_at").eq("published", true),
+    supabase.from("studies").select("slug, updated_at").eq("published", true),
+  ]);
+
+  const projects = projectsRes.data || [];
+  const studies = studiesRes.data || [];
 
   // Static pages
   const staticPages = [
     "",
     "/projects",
-    "/trips",
     "/studies",
-    "/experience",
-    "/goals",
-    "/learning",
-    "/blog",
-    "/timeline",
-    "/gallery",
-    "/press",
+    "/education",
     "/contact",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
@@ -30,26 +30,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Project pages
   const projectPages = projects.map((project) => ({
     url: `${baseUrl}/projects/${project.slug}`,
-    lastModified: new Date(),
+    lastModified: project.updated_at ? new Date(project.updated_at) : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  // Trip pages
-  const tripPages = trips.map((trip) => ({
-    url: `${baseUrl}/trips/${trip.slug}`,
-    lastModified: new Date(),
+  // Study pages
+  const studyPages = studies.map((study) => ({
+    url: `${baseUrl}/studies/${study.slug}`,
+    lastModified: study.updated_at ? new Date(study.updated_at) : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  // Blog pages
-  const blogPages = blog.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
-
-  return [...staticPages, ...projectPages, ...tripPages, ...blogPages];
+  return [...staticPages, ...projectPages, ...studyPages];
 }
