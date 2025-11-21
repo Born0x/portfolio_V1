@@ -110,14 +110,14 @@ export function ToolsSection() {
                   key={tool.name}
                   className="group flex flex-col items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-6 transition-all hover:bg-white/10 hover:border-netflix-red/50 hover:shadow-lg"
                 >
-                  <div className="h-16 w-16 grayscale transition-all group-hover:grayscale-0">
+                  <div className="h-16 w-16 transition-all">
                     <img
                       src={tool.logo}
                       alt={tool.name}
                       className="h-full w-full object-contain"
                     />
                   </div>
-                  <span className="text-center text-sm font-medium text-muted-foreground group-hover:text-white transition-colors">
+                  <span className="text-center text-sm font-medium text-white transition-colors">
                     {tool.name}
                   </span>
                 </div>
